@@ -1,0 +1,23 @@
+# Dépendances Node.js
+node_modules/
+npm-debug.log*
+
+# Fichiers d'environnement (secrets)
+.env
+.env.local
+
+# Base de données SQLite
+*.sqlite
+*.sqlite3
+*.db
+
+# Fichiers systèmes et de l'éditeur
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Dossiers de build (Expo / React Native)
+.expo/
+dist/
+build/
