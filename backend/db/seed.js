@@ -1,24 +1,30 @@
 const db = require('./database');
+const bcrypt = require('bcryptjs'); // Ajout de bcrypt
 
 console.log('🌱 Insertion des données de test...');
+
+// Hachage des mots de passe
+const adminPass = bcrypt.hashSync('admin123', 10);
+const ownerPass = bcrypt.hashSync('owner123', 10);
+const clientPass = bcrypt.hashSync('client123', 10);
 
 // 1. Créer un admin
 db.prepare(`
   INSERT INTO users (name, email, password, phone, role)
   VALUES (?, ?, ?, ?, ?)
-`).run('Admin FootBook', 'admin@footbook.mg', 'admin123', '+261340000000', 'admin');
+`).run('Admin FootBook', 'admin@footbook.mg', adminPass, '+261340000000', 'admin');
 
 // 2. Créer un propriétaire
 db.prepare(`
   INSERT INTO users (name, email, password, phone, role)
   VALUES (?, ?, ?, ?, ?)
-`).run('Rakoto Propriétaire', 'rakoto@footbook.mg', 'owner123', '+261341111111', 'owner');
+`).run('Rakoto Propriétaire', 'rakoto@footbook.mg', ownerPass, '+261341111111', 'owner');
 
 // 3. Créer un client
 db.prepare(`
   INSERT INTO users (name, email, password, phone, role)
   VALUES (?, ?, ?, ?, ?)
-`).run('Rabe Client', 'rabe@footbook.mg', 'client123', '+261342222222', 'client');
+`).run('Rabe Client', 'rabe@footbook.mg', clientPass, '+261342222222', 'client');
 
 // 4. Créer un terrain pour le propriétaire (ID 2)
 db.prepare(`
