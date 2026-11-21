@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useAuth } from '../contexts/AuthContext';
 import { fetchData } from '../services/api';
 
 interface Terrain {
@@ -13,6 +14,7 @@ interface Terrain {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { user, logout } = useAuth(); // Récupération de l'utilisateur et de la fonction logout
   const [terrains, setTerrains] = useState<Terrain[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -53,6 +55,22 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      {/* --- BARRE D'AUTHENTIFICATION --- */}
+      <View style={styles.authBar}>
+        {user ? (
+          <>
+            <Text style={styles.authText}>Connecté : {user.name}</Text>
+            <TouchableOpacity onPress={logout}>
+              <Text style={styles.authButton}>Déconnexion</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <TouchableOpacity onPress={() => router.push('/login')}>
+            <Text style={styles.authButton}>Se connecter</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
       <Text style={styles.title}>⚽ FOOTBOOK</Text>
       <Text style={styles.subtitle}>Terrains disponibles</Text>
 
@@ -104,6 +122,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     padding: 20,
+  },
+  authBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingHorizontal: 4,
+  },
+  authText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  authButton: {
+    color: '#2E7D32',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
   title: {
     fontSize: 28,

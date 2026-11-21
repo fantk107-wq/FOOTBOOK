@@ -1,7 +1,8 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
-import { fetchData } from '../../services/api';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useAuth } from '../../contexts/AuthContext';
+import { API_URL, fetchData } from '../../services/api';
 
 interface Terrain {
   id: number;
@@ -22,9 +23,11 @@ interface Slot {
 export default function TerrainDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const { user, token } = useAuth(); // Récupération de l'utilisateur et du token
+  
   const [terrain, setTerrain] = useState<Terrain | null>(null);
   const [slots, setSlots] = useState<Slot[]>([]);
-  const [date, setDate] = useState('2026-11-23');
+  const [date, setDate] = useState('2026-11-23'); // Date par défaut pour les tests
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -53,6 +56,35 @@ export default function TerrainDetailScreen() {
       setSlots(data.slots || []);
     } catch (err) {
       setSlots([]);
+    }
+  };
+
+  // Fonction pour réserver un créneau
+  const reserver = async (start_time: string) => {
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+    try {
+      const response = await fetch(`${API_URL}/api/reservations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          terrain_id: Number(id),
+          date: date,
+          start_time: start_time,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Erreur lors de la réservation.');
+      
+      alert('Réservation envoyée ! En attente de confirmation.');
+      loadSlots(); // Rafraîchir la liste pour voir le créneau devenir indisponible
+    } catch (err: any) {
+      alert(err.message || 'Erreur lors de la réservation.');
     }
   };
 
@@ -89,9 +121,18 @@ export default function TerrainDetailScreen() {
         renderItem={({ item }) => (
           <View style={[styles.slot, !item.available && styles.slotDisabled]}>
             <Text style={styles.slotTime}>{item.start_time} - {item.end_time}</Text>
-            <Text style={item.available ? styles.slotAvailable : styles.slotUnavailable}>
-              {item.available ? 'Disponible' : 'Indisponible'}
-            </Text>
+            
+            {/* Bouton Réserver ou texte Indisponible */}
+            {item.available ? (
+              <TouchableOpacity 
+                onPress={() => reserver(item.start_time)} 
+                style={styles.reserveBtn}
+              >
+                <Text style={styles.reserveBtnText}>Réserver</Text>
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.slotUnavailable}>Indisponible</Text>
+            )}
           </View>
         )}
         ListEmptyComponent={<Text style={styles.emptyText}>Aucun créneau pour cette date.</Text>}
@@ -121,7 +162,13 @@ const styles = StyleSheet.create({
   },
   slotDisabled: { backgroundColor: '#E0E0E0' },
   slotTime: { fontSize: 16, color: '#333' },
-  slotAvailable: { color: '#2E7D32', fontWeight: 'bold' },
   slotUnavailable: { color: '#D32F2F', fontWeight: 'bold' },
   emptyText: { textAlign: 'center', color: '#999', marginTop: 20 },
+  reserveBtn: {
+    backgroundColor: '#2E7D32',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+  },
+  reserveBtnText: { color: '#FFF', fontWeight: 'bold', fontSize: 13 },
 });
