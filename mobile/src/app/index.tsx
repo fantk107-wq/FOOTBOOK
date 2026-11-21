@@ -1,8 +1,8 @@
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { fetchData } from '../services/api';
 
-// On décrit la forme d'un terrain pour TypeScript
 interface Terrain {
   id: number;
   name: string;
@@ -12,7 +12,7 @@ interface Terrain {
 }
 
 export default function HomeScreen() {
-  // On précise que terrains est un tableau de Terrain
+  const router = useRouter();
   const [terrains, setTerrains] = useState<Terrain[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -55,19 +55,23 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>⚽ FOOTBOOK</Text>
       <Text style={styles.subtitle}>Terrains disponibles</Text>
-      
+
       <FlatList
         data={terrains}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => router.push({ pathname: '/terrain/[id]', params: { id: item.id } })}
+            activeOpacity={0.7}
+          >
             <Text style={styles.cardTitle}>{item.name}</Text>
             <Text style={styles.cardLocation}>📍 {item.location}</Text>
             <Text style={styles.cardType}>🏟️ {item.type}</Text>
             <Text style={styles.cardPrice}>
               {item.price_per_slot} Ar / créneau de 2h
             </Text>
-          </View>
+          </TouchableOpacity>
         )}
         ListEmptyComponent={
           <Text style={styles.emptyText}>Aucun terrain disponible pour le moment.</Text>
