@@ -24,6 +24,9 @@ app.use('/api/auth', authRoutes);
 
 const terrainRoutes = require('./routes/terrainRoutes');
 app.use('/api/terrains', terrainRoutes);
+
+const reservationRoutes = require('./routes/reservationRoutes');
+app.use('/api/reservations', reservationRoutes);
 // 6. Démarrage du serveur
 app.listen(PORT, () => {
   console.log(`🚀 Serveur FootBook démarré sur http://localhost:${PORT}`);

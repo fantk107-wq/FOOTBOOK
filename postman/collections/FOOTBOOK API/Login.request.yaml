@@ -4,11 +4,5 @@ url: http://localhost:3000/api/auth/login
 method: POST
 body:
   type: json
-  content: "{\r
-
-    \  \"email\": \"rakoto@footbook.mg\",\r
-
-    \  \"password\": \"owner123\"\r
-
-    }"
+  content: '{ "email": "rabe@footbook.mg", "password": "client123" }'
 order: 1000
