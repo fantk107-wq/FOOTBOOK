@@ -81,6 +81,15 @@ export default function OwnerReservationsScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Espace Propriétaire</Text>
+      
+      {/* --- BOUTON AJOUTER UN TERRAIN --- */}
+      <TouchableOpacity
+        style={styles.addTerrainBtn}
+        onPress={() => router.push('/add-terrain')}
+      >
+        <Text style={styles.addTerrainText}>➕ Ajouter un terrain</Text>
+      </TouchableOpacity>
+
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <FlatList
@@ -121,6 +130,18 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5', paddingTop: 60, paddingHorizontal: 16 },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5F5F5' },
   title: { fontSize: 26, fontWeight: 'bold', color: '#2E7D32', marginBottom: 20 },
+  addTerrainBtn: {
+    backgroundColor: '#2E7D32',
+    padding: 14,
+    borderRadius: 8,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  addTerrainText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
   errorText: { color: '#D32F2F', marginBottom: 12 },
   card: {
     backgroundColor: '#FFF',

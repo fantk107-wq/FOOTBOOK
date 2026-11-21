@@ -11,6 +11,7 @@ export default function RootLayout() {
         <Stack.Screen name="login" options={{ title: 'Connexion' }} />
         <Stack.Screen name="mes-reservations" options={{ title: 'Mes réservations' }} />
         <Stack.Screen name="owner-reservations" options={{ title: 'Espace Propriétaire' }} />
+        <Stack.Screen name="add-terrain" options={{ title: 'Nouveau terrain' }} />
       </Stack>
       <StatusBar style="auto" />
     </AuthProvider>
