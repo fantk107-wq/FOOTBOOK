@@ -14,7 +14,7 @@ interface Terrain {
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { user, logout } = useAuth(); // Récupération de l'utilisateur et de la fonction logout
+  const { user, logout } = useAuth();
   const [terrains, setTerrains] = useState<Terrain[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -70,6 +70,26 @@ export default function HomeScreen() {
           </TouchableOpacity>
         )}
       </View>
+
+      {/* --- BOUTON MES RÉSERVATIONS (visible si connecté) --- */}
+      {user && (
+        <TouchableOpacity
+          style={styles.myReservationsBtn}
+          onPress={() => router.push('/mes-reservations')}
+        >
+          <Text style={styles.myReservationsText}>📋 Voir mes réservations</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* --- BOUTON ESPACE PROPRIÉTAIRE (visible si role === 'owner') --- */}
+      {user?.role === 'owner' && (
+        <TouchableOpacity
+          style={styles.ownerReservationsBtn}
+          onPress={() => router.push('/owner-reservations')}
+        >
+          <Text style={styles.myReservationsText}>🏟️ Gérer mes terrains</Text>
+        </TouchableOpacity>
+      )}
 
       <Text style={styles.title}>⚽ FOOTBOOK</Text>
       <Text style={styles.subtitle}>Terrains disponibles</Text>
@@ -136,6 +156,25 @@ const styles = StyleSheet.create({
   },
   authButton: {
     color: '#2E7D32',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  myReservationsBtn: {
+    backgroundColor: '#1976D2',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  ownerReservationsBtn: {
+    backgroundColor: '#F57C00',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  myReservationsText: {
+    color: '#FFF',
     fontWeight: 'bold',
     fontSize: 14,
   },
