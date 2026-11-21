@@ -6,9 +6,9 @@ body:
   type: json
   content: "{\r
 
-    \  \"email\": \"rabe@footbook.mg\",\r
+    \  \"email\": \"rakoto@footbook.mg\",\r
 
-    \  \"password\": \"client123\"\r
+    \  \"password\": \"owner123\"\r
 
     }"
 order: 1000
