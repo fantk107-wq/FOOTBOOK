@@ -18,6 +18,10 @@ app.get('/', (req, res) => {
   res.json({ message: 'Bienvenue sur l\'API FootBook !' });
 });
 
+// --- Importation et branchement des routes ---
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
 // 6. Démarrage du serveur
 app.listen(PORT, () => {
   console.log(`🚀 Serveur FootBook démarré sur http://localhost:${PORT}`);
